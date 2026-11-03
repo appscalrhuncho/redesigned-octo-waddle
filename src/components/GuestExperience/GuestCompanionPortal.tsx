@@ -141,10 +141,10 @@ export const GuestCompanionPortal: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Top Banner & In-House Switcher */}
-      <div className="bg-[#141A17] text-[#FBF9F5] rounded-2xl p-5 border border-[#2D3E35] shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#141A17] text-[#FBF9F5] rounded-2xl p-4 sm:p-5 border border-[#2D3E35] shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4 w-full max-w-full">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-cyan-950/80 text-cyan-300 border border-cyan-800">
@@ -152,7 +152,7 @@ export const GuestCompanionPortal: React.FC = () => {
             </span>
             <span className="text-xs text-[#A6B4AE]">Mobile & Tablet Responsive View</span>
           </div>
-          <h1 className="font-serif-heading text-2xl font-bold text-[#F7F4EE]">
+          <h1 className="font-serif-heading text-xl sm:text-2xl font-bold text-[#F7F4EE]">
             Guest In-Room Experience Suite
           </h1>
           <p className="text-xs text-[#8EA299]">
@@ -161,7 +161,7 @@ export const GuestCompanionPortal: React.FC = () => {
         </div>
 
         {/* In-House Guest Selector for Interactive Demoing */}
-        <div className="flex items-center gap-2 bg-[#1C2621] p-2 rounded-xl border border-[#304239]">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 bg-[#1C2621] p-2 rounded-xl border border-[#304239] w-full md:w-auto">
           <span className="text-xs text-[#8EA299] shrink-0 font-medium">Switch In-House Guest:</span>
           <select
             value={selectedResId}
@@ -169,7 +169,7 @@ export const GuestCompanionPortal: React.FC = () => {
               setSelectedResId(e.target.value);
               setIsCheckoutDone(false);
             }}
-            className="bg-[#141A17] text-[#E0CDA9] text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#3A4E43] outline-none cursor-pointer"
+            className="bg-[#141A17] text-[#E0CDA9] text-xs font-semibold px-3 py-1.5 rounded-lg border border-[#3A4E43] outline-none cursor-pointer w-full sm:w-auto max-w-full truncate"
           >
             {reservations.map(r => (
               <option key={r.id} value={r.id}>
@@ -181,7 +181,7 @@ export const GuestCompanionPortal: React.FC = () => {
       </div>
 
       {/* Main Container Formatted like a Luxury Smartphone / Tablet Screen */}
-      <div className="max-w-4xl mx-auto bg-white border border-[#EAE3D6] rounded-3xl shadow-xl overflow-hidden">
+      <div className="max-w-4xl mx-auto bg-white border border-[#EAE3D6] rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden w-full max-w-full">
         
         {/* Guest Hero Header with Suite Background */}
         <div className="relative h-64 bg-[#141A17] overflow-hidden text-white flex flex-col justify-end p-6">

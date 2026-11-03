@@ -75,10 +75,10 @@ export const GroupEventsManager: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Top Banner */}
-      <div className="bg-[#141A17] text-[#FBF9F5] rounded-2xl p-5 border border-[#2D3E35] shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#141A17] text-[#FBF9F5] rounded-2xl p-4 sm:p-5 border border-[#2D3E35] shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 w-full max-w-full">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-blue-950/80 text-blue-300 border border-blue-800">
@@ -86,7 +86,7 @@ export const GroupEventsManager: React.FC = () => {
             </span>
             <span className="text-xs text-[#A6B4AE]">High-Margin Corporate & Buyout Revenue</span>
           </div>
-          <h1 className="font-serif-heading text-2xl font-bold text-[#F7F4EE]">
+          <h1 className="font-serif-heading text-xl sm:text-2xl font-bold text-[#F7F4EE]">
             Sales & Group Event Management
           </h1>
           <p className="text-xs text-[#8EA299]">

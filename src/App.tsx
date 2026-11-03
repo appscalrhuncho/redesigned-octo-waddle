@@ -23,23 +23,24 @@ import { RevenueDashboard } from './components/Analytics/RevenueDashboard';
 import { NewReservationModal } from './components/Modals/NewReservationModal';
 import { GuestFolioModal } from './components/Modals/GuestFolioModal';
 import { DigitalKeyModal } from './components/Modals/DigitalKeyModal';
+import { CloudPortfolioSyncModal } from './components/Modals/CloudPortfolioSyncModal';
 
 const HotelAppContent: React.FC = () => {
   const { activeView, setActiveView, openNewReservationModal } = useHotel();
   const isGuestExperience = ['booking_portal', 'booking', 'guest_portal'].includes(activeView);
 
   return (
-    <div className="min-h-screen bg-[#F3F6F9] text-[#111A22] flex flex-col font-sans-body selection:bg-[#B8FF00]/30 selection:text-[#081015]">
+    <div className="min-h-screen bg-[#F3F6F9] text-[#111A22] flex flex-col font-sans-body selection:bg-[#B8FF00]/30 selection:text-[#081015] w-full max-w-full overflow-x-hidden">
       
       {/* Global brand header */}
       <Header />
 
       {/* SaaS Workspace Shell */}
-      <div className="flex-1 lg:flex max-w-[1680px] w-full mx-auto">
+      <div className="flex-1 lg:flex max-w-[1680px] w-full max-w-full mx-auto min-w-0 overflow-x-hidden lg:overflow-x-visible">
         <Navigation />
 
         {/* Main Viewport Container */}
-        <main className="flex-1 min-w-0 px-3 sm:px-6 lg:px-8 py-5 lg:py-7">
+        <main className="flex-1 min-w-0 w-full max-w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-7 overflow-x-hidden">
           {(activeView === 'dashboard') && <OperationsCommandCenter />}
           {(activeView === 'matrix' || activeView === 'timeline') && <AvailabilityGrid />}
           {(activeView === 'frontdesk' || activeView === 'front_desk') && <FrontDeskDashboard />}
@@ -59,6 +60,7 @@ const HotelAppContent: React.FC = () => {
       <NewReservationModal />
       <GuestFolioModal />
       <DigitalKeyModal />
+      <CloudPortfolioSyncModal />
 
       {/* Footer Branding */}
       <footer className="py-6 border-t border-[#DCE5EB] bg-[#F3F6F9] text-center text-xs text-[#647580]">

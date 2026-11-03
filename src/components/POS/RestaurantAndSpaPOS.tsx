@@ -137,7 +137,7 @@ export const RestaurantAndSpaPOS: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* POS Top Bar */}
       <div className="bg-white border border-[#E3DCD1] rounded-3xl p-5 lg:p-6 shadow-sm">

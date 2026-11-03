@@ -25,6 +25,7 @@ export const AvailabilityGrid: React.FC = () => {
     rooms, 
     reservations, 
     currentDate, 
+    activeProperty,
     openNewReservationModal, 
     openFolioModal,
     openDigitalKeyModal,
@@ -86,6 +87,7 @@ export const AvailabilityGrid: React.FC = () => {
 
   // Calculate daily occupancy
   const getOccupancyForDate = (dateStr: string) => {
+    if (rooms.length === 0) return 0;
     const occupied = reservations.filter(r => {
       if (r.status === 'cancelled') return false;
       return dateStr >= r.checkInDate && dateStr < r.checkOutDate;
@@ -102,7 +104,7 @@ export const AvailabilityGrid: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Header & Matrix Controls */}
       <div className="bg-white border border-[#E3DCD1] rounded-3xl p-5 lg:p-6 shadow-sm">
@@ -113,10 +115,10 @@ export const AvailabilityGrid: React.FC = () => {
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider uppercase bg-[#1E2522] text-[#D4AF37]">
                 Live Availability Matrix
               </span>
-              <span className="text-xs text-[#7A8C84]">14-Day Timeline Tape Chart</span>
+              <span className="text-xs text-[#7A8C84]">14-Day Timeline Tape Chart • {activeProperty}</span>
             </div>
             <h2 className="font-serif-heading text-2xl lg:text-3xl font-medium text-[#1E2522]">
-              Room Inventory & Schedule
+              {rooms.length} Suites — Room Inventory & Schedule
             </h2>
           </div>
 
@@ -220,11 +222,37 @@ export const AvailabilityGrid: React.FC = () => {
         </div>
       </div>
 
+      {/* Fresh workspace helper banner */}
+      {reservations.length === 0 && (
+        <div className="bg-[#B8FF00]/10 border border-[#B8FF00]/40 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-[#2A4400]">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-4 h-4 text-[#355205] shrink-0" />
+            <span>
+              <strong>All {rooms.length} suites at {activeProperty} are clean & ready for booking.</strong> Click any calendar cell or room slot below to create a guest reservation.
+            </span>
+          </div>
+          <button
+            onClick={() => openNewReservationModal()}
+            className="px-3.5 py-1.5 bg-[#B8FF00] hover:bg-[#C8FF45] text-[#081015] font-bold text-xs rounded-xl transition-colors shrink-0 shadow-sm"
+          >
+            + New Reservation
+          </button>
+        </div>
+      )}
+
       {/* VIEW 1: Tape Chart Timeline Matrix */}
       {viewMode === 'tape' && (
-        <div className="bg-white border border-[#E3DCD1] rounded-3xl shadow-sm overflow-hidden">
-          <div className="overflow-x-auto">
-            <div className="min-w-[1100px]">
+        <div className="space-y-2 w-full max-w-full">
+          <div className="lg:hidden flex items-center justify-between bg-[#EAF1F5] text-[#24343E] px-3.5 py-2 rounded-xl text-[11px] border border-[#DCE5EB]">
+            <span className="flex items-center gap-1.5 font-medium">
+              <span>↔</span> Swipe horizontally to browse 14-day schedule
+            </span>
+            <span className="font-bold text-[#087887]">14-Day Tape</span>
+          </div>
+
+          <div className="bg-white border border-[#E3DCD1] rounded-2xl sm:rounded-3xl shadow-sm overflow-hidden w-full max-w-full">
+            <div className="overflow-x-auto w-full max-w-full">
+              <div className="min-w-[1050px]">
               
               {/* Matrix Column Headers */}
               <div className="grid grid-cols-[240px_repeat(14,_minmax(58px,_1fr))] border-b border-[#E3DCD1] bg-[#1E2522] text-[#FBF9F5] sticky top-0 z-20">
@@ -368,6 +396,7 @@ export const AvailabilityGrid: React.FC = () => {
 
             </div>
           </div>
+        </div>
         </div>
       )}
 

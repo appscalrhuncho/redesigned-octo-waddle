@@ -49,6 +49,8 @@ export const OperationsCommandCenter: React.FC = () => {
     updateRoomStatus,
     openFolioModal,
     openDigitalKeyModal,
+    openNewReservationModal,
+    openCloudSyncModal,
     setActiveView,
     formatCurrency
   } = useHotel();
@@ -108,7 +110,7 @@ export const OperationsCommandCenter: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Top Banner: Operations Command Briefing */}
       <div className="brand-command-hero brand-neon-glow text-white rounded-2xl p-5 sm:p-6 border border-[#20313B] shadow-xl relative overflow-hidden">
@@ -160,6 +162,51 @@ export const OperationsCommandCenter: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* New Hotel Workspace Welcome Banner */}
+      {reservations.length === 0 && (
+        <div className="rounded-2xl border border-[#B8FF00]/40 bg-gradient-to-r from-[#0C141C] via-[#101C26] to-[#0A1218] p-5 text-white shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3.5">
+            <div className="p-2.5 rounded-xl bg-[#B8FF00]/15 text-[#B8FF00] border border-[#B8FF00]/30 shrink-0">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold text-sm text-white">
+                  Fresh Workspace Initialized: {activeProperty}
+                </h3>
+                <span className="text-[10px] bg-[#B8FF00]/20 text-[#C8FF45] px-2 py-0.5 rounded font-bold">
+                  {rooms.length} Suites Ready
+                </span>
+              </div>
+              <p className="text-xs text-[#A8B7AF] mt-1 max-w-xl leading-relaxed">
+                This property workspace starts with fresh room inventory and zero historical bookings. Existing demo data on your other hotels remains preserved in your portfolio.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              onClick={() => openNewReservationModal()}
+              className="px-3.5 py-2 rounded-xl bg-[#B8FF00] hover:bg-[#C8FF45] text-[#081015] text-xs font-bold transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[3]" />
+              <span>Book First Guest</span>
+            </button>
+            <button
+              onClick={() => setActiveView('matrix')}
+              className="px-3.5 py-2 rounded-xl bg-[#192733] hover:bg-[#223544] text-[#D1DDD7] text-xs font-semibold transition-colors border border-[#2B3E4D]"
+            >
+              Tape Chart Grid
+            </button>
+            <button
+              onClick={() => openCloudSyncModal()}
+              className="px-3 py-2 rounded-xl bg-[#00DDF2]/10 hover:bg-[#00DDF2]/20 text-[#00DDF2] text-xs font-bold transition-colors flex items-center gap-1 border border-[#00DDF2]/30"
+            >
+              <span>↗ View plan</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Exception-First Design Attention Board */}
       <div className="bg-[#FAF8F4] border border-[#EAE3D6] rounded-2xl p-5 shadow-sm">
@@ -376,23 +423,33 @@ export const OperationsCommandCenter: React.FC = () => {
             <p className="text-xs text-[#7A8C84] mb-4">Historical vs projected booking trajectory</p>
 
             <div className="h-44 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={metrics.slice(0, 7)}>
-                  <defs>
-                    <linearGradient id="colorOcc" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00DDF2" stopOpacity={0.4}/>
-                      <stop offset="95%" stopColor="#00DDF2" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis dataKey="dayLabel" stroke="#8EA299" fontSize={10} tickLine={false} />
-                  <YAxis stroke="#8EA299" fontSize={10} tickLine={false} domain={[0, 100]} />
-                  <Tooltip 
-                    contentStyle={{ backgroundColor: '#1E2522', borderRadius: '12px', border: '1px solid #3A4E43', color: '#FBF9F5', fontSize: '11px' }}
-                    formatter={(val: number) => [`${val}% Occupancy`, 'Yield']}
-                  />
-                  <Area type="monotone" dataKey="occupancyPercent" stroke="#9E7D23" strokeWidth={2.5} fillOpacity={1} fill="url(#colorOcc)" />
-                </AreaChart>
-              </ResponsiveContainer>
+              {metrics.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={metrics.slice(0, 7)}>
+                    <defs>
+                      <linearGradient id="colorOcc" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#00DDF2" stopOpacity={0.4}/>
+                        <stop offset="95%" stopColor="#00DDF2" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="dayLabel" stroke="#8EA299" fontSize={10} tickLine={false} />
+                    <YAxis stroke="#8EA299" fontSize={10} tickLine={false} domain={[0, 100]} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#1E2522', borderRadius: '12px', border: '1px solid #3A4E43', color: '#FBF9F5', fontSize: '11px' }}
+                      formatter={(val: number) => [`${val}% Occupancy`, 'Yield']}
+                    />
+                    <Area type="monotone" dataKey="occupancyPercent" stroke="#9E7D23" strokeWidth={2.5} fillOpacity={1} fill="url(#colorOcc)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-full flex flex-col items-center justify-center text-center p-4 border border-dashed border-[#DCE5EB] rounded-xl bg-white/70">
+                  <TrendingUp className="w-6 h-6 text-[#087887] mb-1.5 opacity-70" />
+                  <span className="font-semibold text-xs text-[#1E2522]">No operating history yet for {activeProperty}</span>
+                  <p className="text-[11px] text-[#647580] max-w-sm mt-0.5">
+                    This hotel begins with {rooms.length} clean keys and 0 historical cycles. Create reservations to chart 7-day occupancy and rate trend analytics.
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

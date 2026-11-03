@@ -121,7 +121,7 @@ export const GuestDirectory: React.FC = () => {
   const guestStays = reservations.filter(r => r.guestId === selectedGuest?.id || r.guestName === selectedGuest?.fullName);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Header */}
       <div className="bg-white border border-[#E3DCD1] rounded-3xl p-5 lg:p-6 shadow-sm">
@@ -150,12 +150,12 @@ export const GuestDirectory: React.FC = () => {
 
         {/* Tier Filter Tabs & Search */}
         <div className="mt-5 pt-4 border-t border-[#EAE3D6] flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-1.5">
+          <div className="flex overflow-x-auto no-scrollbar sm:flex-wrap gap-1.5 pb-1 sm:pb-0 w-full">
             {['All', 'Black Diamond VIP', 'Gold', 'Silver', 'Standard'].map(tier => (
               <button
                 key={tier}
                 onClick={() => setSelectedTier(tier)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border ${
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all border whitespace-nowrap shrink-0 ${
                   selectedTier === tier
                     ? 'bg-[#1E2522] text-white border-[#1E2522] shadow-sm'
                     : 'bg-[#FAF8F4] border-[#E0D8CC] text-[#55675F] hover:bg-white'
@@ -166,14 +166,14 @@ export const GuestDirectory: React.FC = () => {
             ))}
           </div>
 
-          <div className="relative">
+          <div className="relative w-full md:w-64 shrink-0">
             <Search className="w-3.5 h-3.5 text-[#889B93] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search guest by name, email, country..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-1.5 rounded-xl bg-[#FAF8F4] border border-[#E0D8CC] text-xs outline-none w-64 focus:border-[#D4AF37]"
+              className="pl-8 pr-3 py-1.5 rounded-xl bg-[#FAF8F4] border border-[#E0D8CC] text-xs outline-none w-full focus:border-[#D4AF37]"
             />
           </div>
         </div>

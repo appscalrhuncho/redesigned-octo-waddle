@@ -51,6 +51,7 @@ export const HousekeepingBoard: React.FC = () => {
   const handleCreateTicket = (e: React.FormEvent) => {
     e.preventDefault();
     const rm = rooms.find(r => r.id === mntRoomId) || rooms[0];
+    if (!rm) return;
     createMaintenanceTicket({
       roomId: rm.id,
       roomNumber: rm.number,
@@ -68,6 +69,7 @@ export const HousekeepingBoard: React.FC = () => {
   const handleCreateHkTask = (e: React.FormEvent) => {
     e.preventDefault();
     const rm = rooms.find(r => r.id === hkRoomId) || rooms[0];
+    if (!rm) return;
     addHousekeepingTask({
       roomId: rm.id,
       roomNumber: rm.number,
@@ -84,7 +86,7 @@ export const HousekeepingBoard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Header Bar */}
       <div className="bg-white border border-[#E3DCD1] rounded-3xl p-5 lg:p-6 shadow-sm">
@@ -101,23 +103,23 @@ export const HousekeepingBoard: React.FC = () => {
             </h2>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center bg-[#FAF8F4] border border-[#E0D8CC] rounded-xl p-1 text-xs">
+          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-[#FAF8F4] border border-[#E0D8CC] rounded-xl p-1 text-xs gap-1 w-full sm:w-auto">
               <button
                 onClick={() => setActiveSubTab('housekeeping')}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-semibold transition-all ${
+                className={`flex items-center justify-center sm:justify-start gap-1.5 px-3.5 py-1.5 rounded-lg font-semibold transition-all ${
                   activeSubTab === 'housekeeping' ? 'bg-[#1E2522] text-white shadow-sm' : 'text-[#55675F]'
                 }`}
               >
-                <Sparkles className="w-3.5 h-3.5" /> Housekeeping ({housekeeping.filter(t => t.status !== 'completed').length} Pending)
+                <Sparkles className="w-3.5 h-3.5 shrink-0" /> Housekeeping ({housekeeping.filter(t => t.status !== 'completed').length} Pending)
               </button>
               <button
                 onClick={() => setActiveSubTab('maintenance')}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-semibold transition-all ${
+                className={`flex items-center justify-center sm:justify-start gap-1.5 px-3.5 py-1.5 rounded-lg font-semibold transition-all ${
                   activeSubTab === 'maintenance' ? 'bg-[#1E2522] text-white shadow-sm' : 'text-[#55675F]'
                 }`}
               >
-                <Wrench className="w-3.5 h-3.5" /> Maintenance Tickets ({maintenance.filter(m => m.status !== 'resolved').length} Open)
+                <Wrench className="w-3.5 h-3.5 shrink-0" /> Maintenance ({maintenance.filter(m => m.status !== 'resolved').length} Open)
               </button>
             </div>
 

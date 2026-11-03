@@ -155,10 +155,10 @@ export const GuestBookingPortal: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 w-full max-w-full overflow-hidden">
       
       {/* Luxury Portal Hero Header */}
-      <div className="relative rounded-[32px] overflow-hidden bg-[#1E2522] text-[#FBF9F5] min-h-[380px] flex flex-col justify-between p-6 lg:p-12 border border-[#303E38] shadow-xl">
+      <div className="relative rounded-[24px] sm:rounded-[32px] overflow-hidden bg-[#1E2522] text-[#FBF9F5] min-h-[300px] sm:min-h-[380px] flex flex-col justify-between p-5 sm:p-6 lg:p-12 border border-[#303E38] shadow-xl w-full max-w-full">
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=1800&auto=format&fit=crop" 
@@ -176,24 +176,24 @@ export const GuestBookingPortal: React.FC = () => {
 
           <button
             onClick={() => setActiveView('dashboard')}
-            className="text-xs text-white/80 hover:text-white bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-full backdrop-blur border border-white/15 transition-all"
+            className="text-xs text-white/80 hover:text-white bg-white/10 hover:bg-white/20 px-3.5 py-1.5 rounded-full backdrop-blur border border-white/15 transition-all shrink-0"
           >
             ← Switch to Staff OS
           </button>
         </div>
 
-        <div className="relative z-10 max-w-2xl mt-8">
-          <h1 className="font-serif-heading text-4xl lg:text-6xl font-medium tracking-tight leading-[1.05]">
+        <div className="relative z-10 max-w-2xl mt-6 sm:mt-8">
+          <h1 className="font-serif-heading text-2xl sm:text-4xl lg:text-6xl font-medium tracking-tight leading-[1.1]">
             Where ocean meets cliffside sanctuary.
           </h1>
-          <p className="mt-3 text-sm lg:text-base text-[#D0DFD8] leading-relaxed">
+          <p className="mt-3 text-xs sm:text-sm lg:text-base text-[#D0DFD8] leading-relaxed">
             Direct bookings receive complimentary Ruinart champagne upon arrival, private sunset deck access, and priority spa reservations.
           </p>
         </div>
       </div>
 
       {/* Interactive Search & Date Bar */}
-      <div className="bg-white border border-[#E3DCD1] rounded-3xl p-5 lg:p-6 shadow-md -mt-12 relative z-20 mx-2 lg:mx-8">
+      <div className="bg-white border border-[#E3DCD1] rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 shadow-md -mt-8 sm:-mt-12 relative z-20 mx-0 sm:mx-2 lg:mx-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           
           <div>

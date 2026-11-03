@@ -147,10 +147,10 @@ export const AIConciergeChat: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Top Banner & Mode Toggle */}
-      <div className="bg-[#141A17] text-[#FBF9F5] rounded-2xl p-5 border border-[#2D3E35] shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-[#141A17] text-[#FBF9F5] rounded-2xl p-4 sm:p-5 border border-[#2D3E35] shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4 w-full max-w-full">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-purple-950/80 text-purple-300 border border-purple-800">
@@ -158,7 +158,7 @@ export const AIConciergeChat: React.FC = () => {
             </span>
             <span className="text-xs text-[#A6B4AE]">AI Concierge + Omnichannel Messaging</span>
           </div>
-          <h1 className="font-serif-heading text-2xl font-bold text-[#F7F4EE]">
+          <h1 className="font-serif-heading text-xl sm:text-2xl font-bold text-[#F7F4EE]">
             AI Concierge ("Aura") & Unified Messaging Hub
           </h1>
           <p className="text-xs text-[#8EA299]">
@@ -167,38 +167,38 @@ export const AIConciergeChat: React.FC = () => {
         </div>
 
         {/* Mode Toggle Switch */}
-        <div className="flex items-center bg-[#1C2621] p-1.5 rounded-xl border border-[#304239] text-xs">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-[#1C2621] p-1.5 rounded-xl border border-[#304239] text-xs gap-1.5 w-full md:w-auto">
           <button
             onClick={() => setActiveMode('ai_concierge')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all ${
+            className={`flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-lg font-bold transition-all text-center ${
               activeMode === 'ai_concierge' ? 'bg-[#D4AF37] text-[#141A17] shadow-sm' : 'text-[#8EA299] hover:text-white'
             }`}
           >
-            <Bot className="w-4 h-4" />
+            <Bot className="w-4 h-4 shrink-0" />
             <span>AI Concierge "Aura"</span>
           </button>
 
           <button
             onClick={() => setActiveMode('unified_inbox')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all ${
+            className={`flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-lg font-bold transition-all text-center ${
               activeMode === 'unified_inbox' ? 'bg-[#D4AF37] text-[#141A17] shadow-sm' : 'text-[#8EA299] hover:text-white'
             }`}
           >
-            <MessageSquare className="w-4 h-4" />
-            <span>Unified Messaging Inbox ({messageThreads.length})</span>
+            <MessageSquare className="w-4 h-4 shrink-0" />
+            <span>Unified Messaging ({messageThreads.length})</span>
           </button>
         </div>
       </div>
 
       {/* Mode 1: AI Concierge Aura Assistant */}
       {activeMode === 'ai_concierge' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full max-w-full">
           
           {/* Chat Interface (8 Cols) */}
-          <div className="lg:col-span-8 bg-white border border-[#EAE3D6] rounded-2xl shadow-md flex flex-col h-[620px] overflow-hidden">
+          <div className="lg:col-span-8 bg-white border border-[#EAE3D6] rounded-2xl shadow-md flex flex-col h-[620px] overflow-hidden w-full max-w-full">
             
             {/* Header */}
-            <div className="bg-[#FAF8F4] border-b border-[#EAE3D6] p-4 flex items-center justify-between">
+            <div className="bg-[#FAF8F4] border-b border-[#EAE3D6] p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-[#1E2522] text-[#D4AF37] flex items-center justify-center shadow-inner">
                   <Sparkles className="w-5 h-5" />

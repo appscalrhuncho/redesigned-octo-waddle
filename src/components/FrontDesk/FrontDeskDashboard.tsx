@@ -72,7 +72,7 @@ export const FrontDeskDashboard: React.FC = () => {
   }, [activeTab, todayArrivals, todayDepartures, todayInHouse, reservations, filterVipOnly, searchQuery]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Front Desk Header & Key Metrics */}
       <div className="bg-white border border-[#E3DCD1] rounded-3xl p-5 lg:p-6 shadow-sm">
@@ -101,7 +101,7 @@ export const FrontDeskDashboard: React.FC = () => {
 
         {/* Tab Selector & Filters */}
         <div className="mt-6 pt-4 border-t border-[#EAE3D6] flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-2">
+          <div className="flex overflow-x-auto no-scrollbar gap-2 pb-1 sm:pb-0 sm:flex-wrap w-full max-w-full">
             {[
               { id: 'arrivals', label: "Today's Arrivals", count: todayArrivals.length, icon: ArrowDownLeft, color: 'text-blue-700' },
               { id: 'departures', label: "Today's Departures", count: todayDepartures.length, icon: ArrowUpRight, color: 'text-purple-700' },
@@ -114,7 +114,7 @@ export const FrontDeskDashboard: React.FC = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all border ${
+                  className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold transition-all border whitespace-nowrap shrink-0 ${
                     isActive
                       ? 'bg-[#1E2522] text-white border-[#1E2522] shadow-sm'
                       : 'bg-[#FAF8F4] border-[#E0D8CC] text-[#55675F] hover:bg-white hover:text-[#1E2522]'
@@ -130,19 +130,19 @@ export const FrontDeskDashboard: React.FC = () => {
             })}
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="relative">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <div className="relative w-full sm:w-auto">
               <Search className="w-3.5 h-3.5 text-[#889B93] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Filter by name, suite, res ID..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-1.5 rounded-xl bg-[#FAF8F4] border border-[#E0D8CC] text-xs outline-none w-56 focus:border-[#D4AF37]"
+                className="pl-8 pr-3 py-1.5 rounded-xl bg-[#FAF8F4] border border-[#E0D8CC] text-xs outline-none w-full sm:w-56 focus:border-[#D4AF37]"
               />
             </div>
 
-            <label className="flex items-center gap-1.5 text-xs text-[#55675F] cursor-pointer">
+            <label className="flex items-center gap-1.5 text-xs text-[#55675F] cursor-pointer shrink-0">
               <input
                 type="checkbox"
                 checked={filterVipOnly}
@@ -156,9 +156,9 @@ export const FrontDeskDashboard: React.FC = () => {
       </div>
 
       {/* Main Reservation Run Sheet List */}
-      <div className="bg-white border border-[#E3DCD1] rounded-3xl overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+      <div className="bg-white border border-[#E3DCD1] rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm w-full max-w-full">
+        <div className="overflow-x-auto w-full max-w-full">
+          <table className="w-full text-left text-xs min-w-[720px]">
             <thead className="bg-[#1E2522] text-[#FBF9F5] text-[11px] uppercase tracking-wider font-semibold">
               <tr>
                 <th className="py-3.5 px-4">Guest & VIP Tier</th>
@@ -325,8 +325,27 @@ export const FrontDeskDashboard: React.FC = () => {
 
               {displayedList.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="text-center py-10 text-xs text-[#7F928A]">
-                    No matching records found in this category.
+                  <td colSpan={7} className="text-center py-12 text-xs text-[#647580]">
+                    <div className="max-w-md mx-auto space-y-2">
+                      <ConciergeBell className="w-8 h-8 text-[#A38020] mx-auto opacity-70" />
+                      <p className="font-semibold text-sm text-[#1E2522]">
+                        {reservations.length === 0 ? 'No reservations yet for this hotel workspace' : 'No matching records in this view'}
+                      </p>
+                      <p className="text-[11px] text-[#647580] leading-relaxed">
+                        {reservations.length === 0
+                          ? `This property has ${rooms.length} suites ready for arrivals. Create your first guest booking or register a walk-in to populate the run sheet.`
+                          : 'Try clearing your search query or switching to another run sheet tab.'}
+                      </p>
+                      {reservations.length === 0 && (
+                        <button
+                          onClick={() => openNewReservationModal()}
+                          className="mt-2 px-4 py-2 bg-[#D4AF37] hover:bg-[#C29E2E] text-[#1A2420] font-bold text-xs rounded-xl shadow-sm inline-flex items-center gap-1.5 transition-colors"
+                        >
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>Create First Reservation</span>
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               )}

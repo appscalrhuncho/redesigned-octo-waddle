@@ -20,7 +20,8 @@ import {
   Coins,
   UserCheck,
   Smartphone,
-  ChevronDown
+  ChevronDown,
+  Cloud
 } from 'lucide-react';
 import { AppLogo } from './Common/AppLogo';
 import { UserRole, CurrencyCode } from '../types';
@@ -45,6 +46,8 @@ export const Header: React.FC = () => {
     activeProperty,
     setActiveProperty,
     addProperty,
+    deleteProperty,
+    openCloudSyncModal,
     resetToDemoData,
     reservations,
     rooms,
@@ -87,6 +90,10 @@ export const Header: React.FC = () => {
         location: newHotelLocation,
         roomCount: Number(newHotelRoomCount)
       });
+      setShowAddHotelModal(false);
+      setNewHotelName('');
+      setNewHotelLocation('');
+      setNewHotelRoomCount('12');
     } catch (error) {
       setNewHotelError(error instanceof Error ? error.message : 'Could not create this hotel workspace.');
     }
@@ -115,73 +122,125 @@ export const Header: React.FC = () => {
 
   return (
     <>
-    <header className="brand-dark-shell sticky top-0 z-40 bg-[#080C11]/95 backdrop-blur-xl text-[#E8F0F4] border-b border-[#263540] px-3 sm:px-6 lg:px-8 py-3 shadow-[0_8px_30px_rgba(8,12,17,0.28)]">
-      <div className="max-w-[1680px] mx-auto flex items-center justify-between gap-3">
+    <header className="brand-dark-shell sticky top-0 z-40 bg-[#080C11]/95 backdrop-blur-xl text-[#E8F0F4] border-b border-[#263540] px-3 sm:px-6 lg:px-8 py-3 shadow-[0_8px_30px_rgba(8,12,17,0.28)] w-full max-w-full">
+      <div className="max-w-[1680px] mx-auto flex items-center justify-between gap-2 sm:gap-3">
         
         {/* Left: Brand Identity & Property Switcher */}
-        <div className="flex items-center gap-3 relative">
-          <div className="cursor-pointer" onClick={() => setActiveView('dashboard')}>
-            <AppLogo size={42} animate />
+        <div className="flex items-center gap-2 sm:gap-3 relative min-w-0">
+          <div className="cursor-pointer shrink-0" onClick={() => setActiveView('dashboard')}>
+            <AppLogo size={36} animate />
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <button 
                 onClick={() => setShowPropertyDropdown(!showPropertyDropdown)}
-                className="font-serif-heading text-lg lg:text-xl tracking-wide font-semibold text-[#F7F4EE] hover:text-[#B8FF00] transition-colors flex items-center gap-1.5 text-left max-w-[260px]"
+                className="font-serif-heading text-base sm:text-lg lg:text-xl tracking-wide font-semibold text-[#F7F4EE] hover:text-[#B8FF00] transition-colors flex items-center gap-1.5 text-left max-w-[125px] xs:max-w-[180px] sm:max-w-[260px]"
               >
                 <span className="truncate">{activeProperty}</span>
-                <ChevronDown className="w-3.5 h-3.5 text-[#8EA299]" />
+                <ChevronDown className="w-3.5 h-3.5 text-[#8EA299] shrink-0" />
               </button>
 
               {showPropertyDropdown && (
                 <div 
-                  className="absolute top-14 left-4 w-72 bg-[#1A2420] border border-[#35483F] rounded-xl shadow-2xl p-2 z-50 text-xs"
+                  className="absolute top-14 left-0 sm:left-4 w-[calc(100vw-1.5rem)] max-w-sm bg-[#101820] border border-[#263540] rounded-2xl shadow-2xl p-2.5 z-50 text-xs backdrop-blur-xl"
                   onMouseLeave={() => setShowPropertyDropdown(false)}
                 >
-                  <span className="text-[10px] text-[#8EA299] uppercase tracking-wider px-2 py-1 block">
-                    Hotel portfolio · {properties.length} {properties.length === 1 ? 'property' : 'properties'}
-                  </span>
-                  {properties.map(p => (
-                    <button
-                      key={p.id}
-                      onClick={() => {
-                        setActiveProperty(p.name);
-                        setShowPropertyDropdown(false);
-                      }}
-                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 transition-colors ${
-                        activeProperty === p.name ? 'bg-[#2B3B33] text-[#D4AF37] font-semibold' : 'text-[#D1DDD7] hover:bg-[#223029]'
-                      }`}
-                    >
-                      <Building className="w-3.5 h-3.5 text-[#A38020] shrink-0" />
-                      <span className="min-w-0 flex-1 text-left">
-                        <span className="block truncate">{p.name}</span>
-                        <span className="mt-0.5 block truncate text-[10px] font-normal text-[#8EA299]">{p.location}</span>
-                      </span>
-                      <span className="text-[10px] text-[#8EA299] shrink-0">{p.roomCount} keys</span>
-                    </button>
-                  ))}
-                  <div className="border-t border-[#2A3831] mt-2 pt-2">
+                  <div className="flex items-center justify-between px-2 py-1.5 border-b border-[#1E2B35] mb-1.5">
+                    <span className="text-[10px] text-[#8EA299] uppercase tracking-wider font-bold">
+                      Hotel Portfolio ({properties.length} {properties.length === 1 ? 'property' : 'properties'})
+                    </span>
+                    <span className="text-[10px] text-emerald-400 font-medium">Independent Workspaces</span>
+                  </div>
+
+                  <div className="space-y-1 max-h-64 overflow-y-auto">
+                    {properties.map(p => {
+                      const isDefault = p.name === 'The Azure Sanctuary (Cliffside)';
+                      const isActive = activeProperty === p.name;
+                      return (
+                        <div
+                          key={p.id}
+                          className={`w-full group rounded-xl flex items-center justify-between p-1.5 transition-colors ${
+                            isActive ? 'bg-[#192733] border border-[#B8FF00]/40 text-[#B8FF00]' : 'text-[#D1DDD7] hover:bg-[#15222B] border border-transparent'
+                          }`}
+                        >
+                          <button
+                            onClick={() => {
+                              setActiveProperty(p.name);
+                              setShowPropertyDropdown(false);
+                            }}
+                            className="flex-1 text-left flex items-center gap-2.5 min-w-0 px-1 py-0.5"
+                          >
+                            <Building className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#B8FF00]' : 'text-[#8EA299]'}`} />
+                            <div className="min-w-0 flex-1 text-left">
+                              <span className="block truncate font-semibold text-white">{p.name}</span>
+                              <span className="block truncate text-[10px] font-normal text-[#8EA299]">{p.location}</span>
+                            </div>
+                            <span className="text-[10px] text-[#A6B4AE] shrink-0 font-medium bg-[#0B1218] px-1.5 py-0.5 rounded border border-[#202E38] mr-1">
+                              {p.roomCount} keys
+                            </span>
+                          </button>
+                          {!isDefault && (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (confirm(`Remove hotel workspace "${p.name}"?`)) {
+                                  deleteProperty(p.name);
+                                }
+                              }}
+                              title="Remove workspace"
+                              className="opacity-60 group-hover:opacity-100 p-1 hover:text-rose-400 text-[#8EA299] transition-opacity"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="border-t border-[#1E2B35] mt-2 pt-2 space-y-1.5">
                     <button
                       onClick={() => {
                         setShowPropertyDropdown(false);
                         setNewHotelError('');
                         setShowAddHotelModal(true);
                       }}
-                      className="w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-xs font-semibold text-[#E0CDA9] hover:bg-[#25332C] transition-colors"
+                      className="w-full flex items-center gap-2 rounded-xl px-2.5 py-2 text-left text-xs font-semibold text-white bg-[#19232B] hover:bg-[#202F3A] transition-colors"
                     >
-                      <Plus className="h-4 w-4 text-[#D4AF37]" />
-                      Add another hotel
+                      <Plus className="h-4 w-4 text-[#B8FF00]" />
+                      <span>Add another hotel workspace</span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setShowPropertyDropdown(false);
+                        openCloudSyncModal();
+                      }}
+                      className="w-full flex items-center justify-between rounded-xl px-2.5 py-1.5 text-left text-[11px] text-[#00DDF2] hover:bg-[#12222B] transition-colors"
+                    >
+                      <span className="flex items-center gap-1.5 font-medium">
+                        <Cloud className="h-3.5 w-3.5 text-[#00DDF2]" />
+                        <span>Keep workspaces synced across devices</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-[#B8FF00]">↗ View plan</span>
                     </button>
                   </div>
                 </div>
               )}
             </div>
-            <p className="text-[10px] sm:text-[11px] text-[#8EA299] tracking-wider uppercase flex items-center gap-2 whitespace-nowrap">
+            <p className="text-[10px] sm:text-[11px] text-[#8EA299] tracking-wider uppercase flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <span>{properties.length} {properties.length === 1 ? 'Hotel' : 'Hotels'} · {rooms.length} Suites</span>
-              <span>•</span>
-              <span className="text-[#D4AF37]">{activePropertyDetails?.location || 'Portfolio workspace'}</span>
-              <span>•</span>
-              <span className="text-emerald-400">Workspace ready</span>
+              <span className="hidden xs:inline">•</span>
+              <span className="text-[#C8FF45] font-semibold truncate max-w-[120px] sm:max-w-none">{activePropertyDetails?.location || 'Portfolio workspace'}</span>
+              <span className="hidden sm:inline">•</span>
+              <button 
+                onClick={() => openCloudSyncModal()}
+                className="text-[#00DDF2] hover:underline flex items-center gap-1 cursor-pointer font-medium"
+                title="View SaaS Cloud Architecture & Sync Plan"
+              >
+                <span className="hidden sm:inline">Local prototype</span>
+                <span className="text-[#B8FF00] font-bold">↗ View plan</span>
+              </button>
             </p>
           </div>
         </div>
@@ -283,7 +342,7 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Right: Currency, Role Persona Switcher, Alerts & Fast Actions */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           
           {/* Currency Switcher */}
           <div className="relative">
@@ -291,7 +350,7 @@ export const Header: React.FC = () => {
               value={currency}
               onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
               aria-label="Currency"
-              className="bg-[#19221E] text-[#D1DDD7] border border-[#2D3E35] rounded-xl px-2.5 py-1.5 text-xs font-semibold hover:border-[#D4AF37] transition-colors outline-none cursor-pointer"
+              className="bg-[#19221E] text-[#D1DDD7] border border-[#2D3E35] rounded-xl px-2 sm:px-2.5 py-1.5 text-[11px] sm:text-xs font-semibold hover:border-[#D4AF37] transition-colors outline-none cursor-pointer"
             >
               {currencies.map(c => (
                 <option key={c} value={c} className="bg-[#1A2420] text-white">{c}</option>
@@ -303,17 +362,17 @@ export const Header: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-              className="flex items-center gap-1.5 bg-[#202C26] hover:bg-[#2B3B33] text-[#E0CDA9] border border-[#3A4E43] rounded-xl px-3 py-1.5 text-xs font-medium transition-colors"
+              className="flex items-center gap-1 sm:gap-1.5 bg-[#202C26] hover:bg-[#2B3B33] text-[#E0CDA9] border border-[#3A4E43] rounded-xl px-2 sm:px-3 py-1.5 text-xs font-medium transition-colors"
             >
-              <UserCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <UserCheck className="w-3.5 h-3.5 text-[#D4AF37] shrink-0" />
               <span className="hidden md:inline">{userRole}</span>
               <span className="md:hidden">Role</span>
-              <ChevronDown className="w-3 h-3 text-[#8EA299]" />
+              <ChevronDown className="w-3 h-3 text-[#8EA299] shrink-0" />
             </button>
 
             {showRoleDropdown && (
               <div 
-                className="absolute right-0 top-full mt-2 w-64 bg-[#1A2420] border border-[#3A4A43] rounded-xl shadow-2xl p-2 z-50 text-xs"
+                className="absolute right-0 top-full mt-2 w-[calc(100vw-1.5rem)] max-w-xs bg-[#1A2420] border border-[#3A4E43] rounded-xl shadow-2xl p-2 z-50 text-xs"
                 onMouseLeave={() => setShowRoleDropdown(false)}
               >
                 <div className="px-2 py-1 border-b border-[#293930] mb-1">
@@ -351,7 +410,7 @@ export const Header: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setShowAlertsDropdown(!showAlertsDropdown)}
-              className="relative p-2 rounded-xl bg-[#19221E] hover:bg-[#24312B] border border-[#2D3E35] text-[#D1DDD7] transition-colors"
+              className="relative p-1.5 sm:p-2 rounded-xl bg-[#19221E] hover:bg-[#24312B] border border-[#2D3E35] text-[#D1DDD7] transition-colors"
               title="Operational Alerts & Exceptions"
             >
               <Bell className="w-4 h-4" />
@@ -364,7 +423,7 @@ export const Header: React.FC = () => {
 
             {showAlertsDropdown && (
               <div 
-                className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-[#1A2420] border border-[#3A4A43] rounded-2xl shadow-2xl p-3 z-50 text-xs text-[#E1E8E4]"
+                className="absolute right-0 top-full mt-2 w-[calc(100vw-1.5rem)] max-w-sm bg-[#1A2420] border border-[#3A4E43] rounded-2xl shadow-2xl p-3 z-50 text-xs text-[#E1E8E4]"
                 onMouseLeave={() => setShowAlertsDropdown(false)}
               >
                 <div className="flex justify-between items-center pb-2 border-b border-[#2A3831] mb-2">
@@ -392,10 +451,10 @@ export const Header: React.FC = () => {
                             : 'bg-[#223029] border-[#314239] text-[#E1E8E4]'
                         }`}
                       >
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-0.5">
-                            <span className="font-semibold text-xs text-white">{a.title}</span>
-                            <span className="text-[10px] text-[#8EA299]">{a.timestamp}</span>
+                            <span className="font-semibold text-xs text-white truncate">{a.title}</span>
+                            <span className="text-[10px] text-[#8EA299] shrink-0 ml-1">{a.timestamp}</span>
                           </div>
                           <p className="text-[11px] text-[#B8C9C1] leading-relaxed">{a.description}</p>
                           {a.actionLabel && (
@@ -413,7 +472,7 @@ export const Header: React.FC = () => {
                         </div>
                         <button 
                           onClick={() => dismissAlert(a.id)}
-                          className="text-[#8EA299] hover:text-white p-0.5"
+                          className="text-[#8EA299] hover:text-white p-0.5 shrink-0"
                           title="Dismiss"
                         >
                           <X className="w-3 h-3" />
@@ -429,7 +488,7 @@ export const Header: React.FC = () => {
           {/* Fast Action: New Reservation */}
           <button
             onClick={() => openNewReservationModal()}
-            className="flex items-center gap-1.5 bg-gradient-to-r from-[#B8FF00] to-[#00DDF2] hover:from-[#C8FF45] hover:to-[#53EAF4] text-[#081015] font-semibold px-3.5 py-1.5 rounded-xl text-xs shadow-md hover:shadow-lg transition-all"
+            className="flex items-center gap-1.5 bg-gradient-to-r from-[#B8FF00] to-[#00DDF2] hover:from-[#C8FF45] hover:to-[#53EAF4] text-[#081015] font-semibold px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs shadow-md hover:shadow-lg transition-all"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span className="hidden sm:inline">New Reservation</span>
@@ -439,7 +498,7 @@ export const Header: React.FC = () => {
           <button
             onClick={resetToDemoData}
             title="Reset system to pristine luxury demo state"
-            className="p-2 rounded-xl bg-[#0C1218] hover:bg-[#17232B] border border-[#263540] text-[#9AAAB3] hover:text-[#00DDF2] transition-colors"
+            className="hidden xs:flex p-1.5 sm:p-2 rounded-xl bg-[#0C1218] hover:bg-[#17232B] border border-[#263540] text-[#9AAAB3] hover:text-[#00DDF2] transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
@@ -522,8 +581,22 @@ export const Header: React.FC = () => {
               </label>
             </div>
 
-            <div className="rounded-xl border border-[#B8FF00]/30 bg-[#B8FF00]/10 px-3.5 py-3 text-[11px] leading-relaxed text-[#3D5E00]">
-              This creates a separate browser-based workspace with a starter room inventory. Your current hotel stays unchanged. This prototype does not yet sync data between users or devices.
+            <div className="rounded-xl border border-[#B8FF00]/40 bg-[#B8FF00]/10 p-3.5 text-xs text-[#2A4400]">
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-0.5">
+                  <span className="font-bold text-[#1F3300] block">Independent Property Workspace</span>
+                  <p className="text-[11px] leading-relaxed text-[#355205]">
+                    This creates a separate workspace with {newHotelRoomCount || '12'} starter suites and zero initial operating history. Demo data on your existing hotel is fully preserved.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => openCloudSyncModal()}
+                  className="shrink-0 text-[11px] font-bold text-[#006E7D] hover:underline flex items-center gap-1"
+                >
+                  <span>↗ View plan</span>
+                </button>
+              </div>
             </div>
             {newHotelError && <p role="alert" className="text-xs font-medium text-rose-700">{newHotelError}</p>}
 

@@ -75,7 +75,7 @@ export const RevenueDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full max-w-full overflow-hidden">
       
       {/* Export Confirmation Toast */}
       {showExportToast && (
@@ -132,29 +132,29 @@ export const RevenueDashboard: React.FC = () => {
         </div>
 
         {/* View Switcher Tabs */}
-        <div className="flex items-center gap-2 mt-5 pt-4 border-t border-[#EAE3D6]">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 mt-5 pt-4 border-t border-[#EAE3D6] w-full">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center sm:justify-start gap-2 ${
               activeTab === 'overview'
                 ? 'bg-[#1E2522] text-[#D4AF37] shadow-sm'
                 : 'bg-[#FAF8F4] text-[#63766D] border border-[#EAE3D6] hover:text-[#1E2522]'
             }`}
           >
-            <BarChart3 className="w-4 h-4" />
-            Executive Revenue Overview & Streams
+            <BarChart3 className="w-4 h-4 shrink-0" />
+            <span>Executive Revenue Overview & Streams</span>
           </button>
 
           <button
             onClick={() => setActiveTab('threshold_alerts')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center justify-center sm:justify-start gap-2 ${
               activeTab === 'threshold_alerts'
                 ? 'bg-rose-700 text-white shadow-sm'
                 : 'bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-100'
             }`}
           >
-            <ShieldAlert className="w-4 h-4 text-rose-500" />
-            Occupancy Threshold Alerts (Monthly / Weekly)
+            <ShieldAlert className="w-4 h-4 text-rose-500 shrink-0" />
+            <span>Occupancy Threshold Alerts</span>
             {deficientDays.length > 0 && (
               <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-rose-200 text-rose-900 font-bold ml-0.5">
                 {deficientDays.length} Alerts
@@ -165,7 +165,7 @@ export const RevenueDashboard: React.FC = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 w-full max-w-full">
         
         <div className="bg-white border border-[#E3DCD1] rounded-3xl p-5 shadow-sm">
           <div className="flex justify-between items-start">
@@ -290,27 +290,37 @@ export const RevenueDashboard: React.FC = () => {
               </div>
 
               <div className="h-72 w-full -ml-2">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={metrics} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                    <XAxis dataKey="dayLabel" stroke="#8E9F97" fontSize={11} tickLine={false} />
-                    <YAxis stroke="#8E9F97" fontSize={11} tickLine={false} tickFormatter={(v) => `$${v}`} />
-                    <Tooltip 
-                      contentStyle={{ 
-                        backgroundColor: '#1E2522', 
-                        borderRadius: '12px', 
-                        border: '1px solid #3A4842', 
-                        color: '#FBF9F5',
-                        fontSize: '12px' 
-                      }} 
-                      formatter={(value: any, name: any) => [`$${Number(value).toLocaleString()}`, name]}
-                    />
-                    <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-                    <Bar dataKey="totalRoomRevenue" name="Suite Accommodation" fill="#1E2522" stackId="a" radius={[0, 0, 0, 0]} />
-                    <Bar dataKey="totalFBRevenue" name="Restaurant & Bar" fill="#D4AF37" stackId="a" />
-                    <Bar dataKey="totalSpaRevenue" name="Sanctuary Spa" fill="#5E7D72" stackId="a" />
-                    <Bar dataKey="totalExcursionsRevenue" name="Excursions & Heli" fill="#99B5A8" stackId="a" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+                {metrics.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={metrics} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <XAxis dataKey="dayLabel" stroke="#8E9F97" fontSize={11} tickLine={false} />
+                      <YAxis stroke="#8E9F97" fontSize={11} tickLine={false} tickFormatter={(v) => `$${v}`} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: '#1E2522', 
+                          borderRadius: '12px', 
+                          border: '1px solid #3A4842', 
+                          color: '#FBF9F5',
+                          fontSize: '12px' 
+                        }} 
+                        formatter={(value: any, name: any) => [`$${Number(value).toLocaleString()}`, name]}
+                      />
+                      <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+                      <Bar dataKey="totalRoomRevenue" name="Suite Accommodation" fill="#1E2522" stackId="a" radius={[0, 0, 0, 0]} />
+                      <Bar dataKey="totalFBRevenue" name="Restaurant & Bar" fill="#D4AF37" stackId="a" />
+                      <Bar dataKey="totalSpaRevenue" name="Sanctuary Spa" fill="#5E7D72" stackId="a" />
+                      <Bar dataKey="totalExcursionsRevenue" name="Excursions & Heli" fill="#99B5A8" stackId="a" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-[#E3DCD1] rounded-2xl bg-[#FAF8F4]">
+                    <BarChart3 className="w-8 h-8 text-[#A67C1E] mb-2 opacity-60" />
+                    <span className="font-semibold text-sm text-[#1E2522]">No Department Revenues Logged Yet</span>
+                    <p className="text-xs text-[#7A8C84] max-w-sm mt-1">
+                      This hotel workspace has no operating history. Post room charges, restaurant orders, or spa folios to chart departmental streams.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -333,72 +343,82 @@ export const RevenueDashboard: React.FC = () => {
               </div>
 
               <div className="h-72 w-full -ml-2">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={metrics} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="occGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#1E2522" stopOpacity={0.5} />
-                        <stop offset="95%" stopColor="#1E2522" stopOpacity={0.0} />
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="dayLabel" stroke="#8E9F97" fontSize={11} tickLine={false} />
-                    <YAxis stroke="#8E9F97" fontSize={11} domain={[50, 100]} tickLine={false} tickFormatter={(v) => `${v}%`} />
-                    
-                    {/* Dashed Red Threshold Goal Line */}
-                    <ReferenceLine 
-                      y={defaultThreshold} 
-                      stroke="#E11D48" 
-                      strokeDasharray="3 3" 
-                      label={{ value: `Goal: ${defaultThreshold}%`, position: 'insideTopRight', fill: '#E11D48', fontSize: 10, fontWeight: 700 }} 
-                    />
+                {metrics.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={metrics} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="occGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#1E2522" stopOpacity={0.5} />
+                          <stop offset="95%" stopColor="#1E2522" stopOpacity={0.0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="dayLabel" stroke="#8E9F97" fontSize={11} tickLine={false} />
+                      <YAxis stroke="#8E9F97" fontSize={11} domain={[50, 100]} tickLine={false} tickFormatter={(v) => `${v}%`} />
+                      
+                      {/* Dashed Red Threshold Goal Line */}
+                      <ReferenceLine 
+                        y={defaultThreshold} 
+                        stroke="#E11D48" 
+                        strokeDasharray="3 3" 
+                        label={{ value: `Goal: ${defaultThreshold}%`, position: 'insideTopRight', fill: '#E11D48', fontSize: 10, fontWeight: 700 }} 
+                      />
 
-                    <Tooltip 
-                      content={({ active, payload }) => {
-                        if (!active || !payload || !payload.length) return null;
-                        const d = payload[0].payload;
-                        const isAlert = d.occupancyPercent < defaultThreshold;
-                        return (
-                          <div className="bg-[#1E2522] text-[#FBF9F5] p-3 rounded-xl border border-[#3A4842] text-xs space-y-1">
-                            <p className="font-bold text-white">{d.dayLabel}</p>
-                            <p className="flex justify-between gap-4">
-                              <span>Occupancy:</span>
-                              <span className={`font-bold ${isAlert ? 'text-rose-400' : 'text-emerald-400'}`}>
-                                {d.occupancyPercent}% {isAlert && '(Below Goal)'}
-                              </span>
-                            </p>
-                            <p className="flex justify-between gap-4 text-[#A8B8B1]">
-                              <span>ADR:</span>
-                              <span>${d.adr}</span>
-                            </p>
-                          </div>
-                        );
-                      }}
-                    />
-                    <Area 
-                      type="monotone" 
-                      dataKey="occupancyPercent" 
-                      stroke="#1E2522" 
-                      strokeWidth={3} 
-                      fillOpacity={1} 
-                      fill="url(#occGrad)" 
-                      dot={(props: any) => {
-                        const { cx, cy, payload } = props;
-                        const isBelow = payload.occupancyPercent < defaultThreshold;
-                        return (
-                          <circle 
-                            key={`dot-${payload.date}`}
-                            cx={cx} 
-                            cy={cy} 
-                            r={isBelow ? 5 : 3} 
-                            fill={isBelow ? '#E11D48' : '#1E2522'} 
-                            stroke="#FFFFFF" 
-                            strokeWidth={isBelow ? 2 : 1} 
-                          />
-                        );
-                      }}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+                      <Tooltip 
+                        content={({ active, payload }) => {
+                          if (!active || !payload || !payload.length) return null;
+                          const d = payload[0].payload;
+                          const isAlert = d.occupancyPercent < defaultThreshold;
+                          return (
+                            <div className="bg-[#1E2522] text-[#FBF9F5] p-3 rounded-xl border border-[#3A4842] text-xs space-y-1">
+                              <p className="font-bold text-white">{d.dayLabel}</p>
+                              <p className="flex justify-between gap-4">
+                                <span>Occupancy:</span>
+                                <span className={`font-bold ${isAlert ? 'text-rose-400' : 'text-emerald-400'}`}>
+                                  {d.occupancyPercent}% {isAlert && '(Below Goal)'}
+                                </span>
+                              </p>
+                              <p className="flex justify-between gap-4 text-[#A8B8B1]">
+                                <span>ADR:</span>
+                                <span>${d.adr}</span>
+                              </p>
+                            </div>
+                          );
+                        }}
+                      />
+                      <Area 
+                        type="monotone" 
+                        dataKey="occupancyPercent" 
+                        stroke="#1E2522" 
+                        strokeWidth={3} 
+                        fillOpacity={1} 
+                        fill="url(#occGrad)" 
+                        dot={(props: any) => {
+                          const { cx, cy, payload } = props;
+                          const isBelow = payload.occupancyPercent < defaultThreshold;
+                          return (
+                            <circle 
+                              key={`dot-${payload.date}`}
+                              cx={cx} 
+                              cy={cy} 
+                              r={isBelow ? 5 : 3} 
+                              fill={isBelow ? '#E11D48' : '#1E2522'} 
+                              stroke="#FFFFFF" 
+                              strokeWidth={isBelow ? 2 : 1} 
+                            />
+                          );
+                        }}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-[#E3DCD1] rounded-2xl bg-[#FAF8F4]">
+                    <ShieldAlert className="w-8 h-8 text-rose-500 mb-2 opacity-60" />
+                    <span className="font-semibold text-sm text-[#1E2522]">No Occupancy Cycles Recorded</span>
+                    <p className="text-xs text-[#7A8C84] max-w-sm mt-1">
+                      Check in guests to start charting actual occupancy against the {defaultThreshold}% target threshold.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 

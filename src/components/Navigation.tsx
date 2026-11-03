@@ -131,8 +131,8 @@ export const Navigation: React.FC = () => {
   ];
 
   return (
-    <nav className="brand-dark-shell bg-[#080C11] text-[#D1DDD7] border-b lg:border-b-0 lg:border-r border-[#263540] lg:w-[272px] lg:min-w-[272px] lg:shrink-0">
-      <div className="flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar p-3 lg:p-4 lg:sticky lg:top-[76px]">
+    <nav className="brand-dark-shell bg-[#080C11] text-[#D1DDD7] border-b lg:border-b-0 lg:border-r border-[#263540] w-full max-w-full lg:w-[272px] lg:min-w-[272px] lg:shrink-0 overflow-hidden">
+      <div className="flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar p-2.5 sm:p-3 lg:p-4 lg:sticky lg:top-[76px] w-full max-w-full">
         <div className="hidden lg:flex items-center justify-between px-2 pb-3 mb-1 border-b border-[#2C3B34]">
           <div>
             <span className="text-[10px] uppercase tracking-[0.16em] text-[#7F958A] font-semibold">Workspace</span>

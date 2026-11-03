@@ -67,6 +67,9 @@ interface HotelContextType {
   activeProperty: string;
   
   // Modals & Drawers
+  isCloudSyncModalOpen: boolean;
+  openCloudSyncModal: () => void;
+  closeCloudSyncModal: () => void;
   isNewReservationModalOpen: boolean;
   newReservationDefaults: Partial<Reservation> | null;
   isFolioModalOpen: boolean;
@@ -83,6 +86,7 @@ interface HotelContextType {
   setCurrency: (curr: CurrencyCode) => void;
   setActiveProperty: (prop: string) => void;
   addProperty: (property: { name: string; location: string; roomCount: number }) => void;
+  deleteProperty: (propertyName: string) => void;
   setCurrentDate: (date: string) => void;
   
   // Reservation actions
@@ -223,9 +227,12 @@ const readWorkspaceState = <T,>(key: string, propertyName: string, fallback: T):
   try {
     const scopedValue = localStorage.getItem(getWorkspaceStorageKey(key, propertyName));
     if (scopedValue !== null) return JSON.parse(scopedValue) as T;
-    // One-time compatibility path for data saved before portfolio scoping.
-    const legacyValue = localStorage.getItem(key);
-    return legacyValue !== null ? JSON.parse(legacyValue) as T : fallback;
+    // One-time compatibility path for data saved before portfolio scoping, ONLY for default property!
+    if (propertyName === DEFAULT_PROPERTY_NAME) {
+      const legacyValue = localStorage.getItem(key);
+      return legacyValue !== null ? JSON.parse(legacyValue) as T : fallback;
+    }
+    return fallback;
   } catch {
     return fallback;
   }
@@ -330,6 +337,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   // Modal states
+  const [isCloudSyncModalOpen, setIsCloudSyncModalOpen] = useState(false);
   const [isNewReservationModalOpen, setIsNewReservationModalOpen] = useState(false);
   const [newReservationDefaults, setNewReservationDefaults] = useState<Partial<Reservation> | null>(null);
   const [isFolioModalOpen, setIsFolioModalOpen] = useState(false);
@@ -339,6 +347,9 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isDigitalCheckInModalOpen, setIsDigitalCheckInModalOpen] = useState(false);
   const [activeCheckInReservation, setActiveCheckInReservation] = useState<Reservation | null>(null);
   const [selectedGuestForDrawer, setSelectedGuestForDrawer] = useState<GuestProfile | null>(null);
+
+  const openCloudSyncModal = () => setIsCloudSyncModalOpen(true);
+  const closeCloudSyncModal = () => setIsCloudSyncModalOpen(false);
 
   // Sync state to local storage
   useEffect(() => {
@@ -392,6 +403,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const setActiveProperty = (prop: string) => {
     if (!properties.some(property => property.name === prop) || prop === activeProperty) return;
     try {
+      // 1. Snapshot current active workspace state to localStorage
       const workspaceData: Record<string, unknown> = {
         [STORAGE_KEYS.ROOMS]: rooms,
         [STORAGE_KEYS.RESERVATIONS]: reservations,
@@ -410,10 +422,41 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       Object.entries(workspaceData).forEach(([key, value]) => {
         localStorage.setItem(getWorkspaceStorageKey(key, activeProperty), JSON.stringify(value));
       });
+
+      // 2. Load the target property's data (preserving demo records for default property, clean state for custom properties)
+      const isDefault = prop === DEFAULT_PROPERTY_NAME;
+      const targetRooms = readWorkspaceState<Room[]>(STORAGE_KEYS.ROOMS, prop, isDefault ? INITIAL_ROOMS : []);
+      const targetReservations = readWorkspaceState<Reservation[]>(STORAGE_KEYS.RESERVATIONS, prop, isDefault ? INITIAL_RESERVATIONS : []);
+      const targetGuests = readWorkspaceState<GuestProfile[]>(STORAGE_KEYS.GUESTS, prop, isDefault ? INITIAL_GUESTS : []);
+      const targetMetrics = readWorkspaceState<DailyMetric[]>(STORAGE_KEYS.METRICS, prop, isDefault ? METRICS_DATA : []);
+      const targetHousekeeping = readWorkspaceState<HousekeepingTask[]>(STORAGE_KEYS.HOUSEKEEPING, prop, isDefault ? INITIAL_HOUSEKEEPING_TASKS : []);
+      const targetMaintenance = readWorkspaceState<MaintenanceTicket[]>(STORAGE_KEYS.MAINTENANCE, prop, isDefault ? INITIAL_MAINTENANCE : []);
+      const targetTables = readWorkspaceState<RestaurantTable[]>(STORAGE_KEYS.TABLES, prop, INITIAL_TABLES);
+      const targetAlerts = readWorkspaceState<ActivityAlert[]>(STORAGE_KEYS.ALERTS, prop, isDefault ? INITIAL_ALERTS : []);
+      const targetChannels = readWorkspaceState<ChannelItem[]>(STORAGE_KEYS.CHANNELS, prop, INITIAL_CHANNELS);
+      const targetAutomations = readWorkspaceState<AutomationRule[]>(STORAGE_KEYS.AUTOMATIONS, prop, INITIAL_AUTOMATION_RULES);
+      const targetServices = readWorkspaceState<ServiceRequest[]>(STORAGE_KEYS.SERVICES, prop, isDefault ? INITIAL_SERVICE_REQUESTS : []);
+      const targetMessages = readWorkspaceState<MessageThread[]>(STORAGE_KEYS.MESSAGES, prop, isDefault ? INITIAL_MESSAGE_THREADS : []);
+      const targetGroups = readWorkspaceState<GroupEvent[]>(STORAGE_KEYS.GROUPS, prop, isDefault ? INITIAL_GROUP_EVENTS : []);
+
+      // 3. Update React states seamlessly without page reload
+      setRooms(targetRooms);
+      setReservations(targetReservations);
+      setGuests(targetGuests);
+      setMetrics(targetMetrics);
+      setHousekeeping(targetHousekeeping);
+      setMaintenance(targetMaintenance);
+      setTables(targetTables);
+      setAlerts(targetAlerts);
+      setChannels(targetChannels);
+      setAutomationRules(targetAutomations);
+      setServiceRequests(targetServices);
+      setMessageThreads(targetMessages);
+      setGroupEvents(targetGroups);
+      setActivePropertyState(prop);
       localStorage.setItem(STORAGE_KEYS.PROPERTY, prop);
-      window.location.reload();
     } catch (e) {
-      console.error(e);
+      console.error('Error switching active property:', e);
     }
   };
 
@@ -432,6 +475,26 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       throw new Error('A hotel with this name already exists in your portfolio.');
     }
 
+    // 1. Snapshot current active workspace
+    const currentWorkspaceData: Record<string, unknown> = {
+      [STORAGE_KEYS.ROOMS]: rooms,
+      [STORAGE_KEYS.RESERVATIONS]: reservations,
+      [STORAGE_KEYS.GUESTS]: guests,
+      [STORAGE_KEYS.METRICS]: metrics,
+      [STORAGE_KEYS.HOUSEKEEPING]: housekeeping,
+      [STORAGE_KEYS.MAINTENANCE]: maintenance,
+      [STORAGE_KEYS.TABLES]: tables,
+      [STORAGE_KEYS.ALERTS]: alerts,
+      [STORAGE_KEYS.CHANNELS]: channels,
+      [STORAGE_KEYS.AUTOMATIONS]: automationRules,
+      [STORAGE_KEYS.SERVICES]: serviceRequests,
+      [STORAGE_KEYS.MESSAGES]: messageThreads,
+      [STORAGE_KEYS.GROUPS]: groupEvents
+    };
+    Object.entries(currentWorkspaceData).forEach(([key, value]) => {
+      localStorage.setItem(getWorkspaceStorageKey(key, activeProperty), JSON.stringify(value));
+    });
+
     const slug = `${slugifyProperty(normalizedName)}-${Date.now().toString(36)}`;
     const newProperty: HotelProperty = {
       id: slug,
@@ -440,10 +503,13 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       roomCount,
       createdAt: new Date().toISOString()
     };
-    const propertyRooms = Array.from({ length: roomCount }, (_, index) => {
+
+    // 2. Generate custom starter room inventory with valid RoomType items
+    const propertyRooms: Room[] = Array.from({ length: roomCount }, (_, index) => {
       const template = INITIAL_ROOMS[index % INITIAL_ROOMS.length];
-      const floor = Math.floor(index / 20) + 1;
-      const number = `${floor}${String((index % 20) + 1).padStart(2, '0')}`;
+      const floor = Math.floor(index / 10) + 1;
+      const roomNumInFloor = (index % 10) + 1;
+      const number = `${floor}${String(roomNumInFloor).padStart(2, '0')}`;
       return {
         ...template,
         id: `${slug}-${number}`,
@@ -453,16 +519,33 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         view: `${normalizedLocation} outlook`,
         status: 'clean' as const,
         housekeepingNotes: undefined,
-        assignedStaff: undefined
+        assignedStaff: undefined,
+        isBlocked: false,
+        blockReason: undefined
       };
     });
-    const cleanTables = INITIAL_TABLES.map(table => ({
+
+    const cleanTables: RestaurantTable[] = INITIAL_TABLES.map(table => ({
       ...table,
       status: 'available' as const,
       activeReservationId: undefined,
       currentGuestName: undefined,
       serverName: undefined
     }));
+
+    const freshChannels: ChannelItem[] = INITIAL_CHANNELS.map(ch => ({
+      ...ch,
+      parityStatus: 'in_parity' as const,
+      stopSell: false
+    }));
+
+    const freshAutomations: AutomationRule[] = INITIAL_AUTOMATION_RULES.map(rule => ({
+      ...rule,
+      actions: [...rule.actions],
+      executionCount: 0,
+      lastExecuted: undefined
+    }));
+
     const newProperties = [...properties, newProperty];
 
     try {
@@ -475,8 +558,8 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         [STORAGE_KEYS.MAINTENANCE]: [],
         [STORAGE_KEYS.TABLES]: cleanTables,
         [STORAGE_KEYS.ALERTS]: [],
-        [STORAGE_KEYS.CHANNELS]: [],
-        [STORAGE_KEYS.AUTOMATIONS]: INITIAL_AUTOMATION_RULES.map(rule => ({ ...rule, actions: [...rule.actions] })),
+        [STORAGE_KEYS.CHANNELS]: freshChannels,
+        [STORAGE_KEYS.AUTOMATIONS]: freshAutomations,
         [STORAGE_KEYS.SERVICES]: [],
         [STORAGE_KEYS.MESSAGES]: [],
         [STORAGE_KEYS.GROUPS]: []
@@ -486,12 +569,46 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       });
       localStorage.setItem(PROPERTIES_STORAGE_KEY, JSON.stringify(newProperties));
       localStorage.setItem(STORAGE_KEYS.PROPERTY, normalizedName);
+
+      // 3. Update React states directly without reloading
       setProperties(newProperties);
+      setRooms(propertyRooms);
+      setReservations([]);
+      setGuests([]);
+      setMetrics([]);
+      setHousekeeping([]);
+      setMaintenance([]);
+      setTables(cleanTables);
+      setAlerts([]);
+      setChannels(freshChannels);
+      setAutomationRules(freshAutomations);
+      setServiceRequests([]);
+      setMessageThreads([]);
+      setGroupEvents([]);
       setActivePropertyState(normalizedName);
-      window.location.reload();
     } catch (error) {
       console.error('Unable to create hotel workspace:', error);
       throw error;
+    }
+  };
+
+  const deleteProperty = (propName: string) => {
+    if (propName === DEFAULT_PROPERTY_NAME) {
+      throw new Error('The primary demo property cannot be removed.');
+    }
+    const updatedProperties = properties.filter(p => p.name !== propName);
+    if (updatedProperties.length === 0) return;
+
+    // Clean up scoped localStorage
+    Object.values(STORAGE_KEYS).forEach(k => {
+      localStorage.removeItem(getWorkspaceStorageKey(k, propName));
+    });
+
+    localStorage.setItem(PROPERTIES_STORAGE_KEY, JSON.stringify(updatedProperties));
+    setProperties(updatedProperties);
+
+    if (activeProperty === propName) {
+      setActiveProperty(DEFAULT_PROPERTY_NAME);
     }
   };
 
@@ -1158,6 +1275,9 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         currency,
         activeProperty,
 
+        isCloudSyncModalOpen,
+        openCloudSyncModal,
+        closeCloudSyncModal,
         isNewReservationModalOpen,
         newReservationDefaults,
         isFolioModalOpen,
@@ -1173,6 +1293,7 @@ export const HotelProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setCurrency,
         setActiveProperty,
         addProperty,
+        deleteProperty,
         setCurrentDate,
 
         createReservation,
