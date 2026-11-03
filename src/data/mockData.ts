@@ -13,7 +13,8 @@ import {
   AutomationRule,
   ServiceRequest,
   MessageThread,
-  GroupEvent
+  GroupEvent,
+  Tenant
 } from '../types';
 
 export const INITIAL_ROOMS: Room[] = [
@@ -1311,4 +1312,286 @@ export const INITIAL_GROUP_EVENTS: GroupEvent[] = [
     functionSheetNotes: 'BEO #891: Champagne toast at 17:30 sunset, live acoustic harpist on clifftop deck, floral arches with white orchids and jasmine.'
   }
 ];
+
+export const INITIAL_TENANTS: Tenant[] = [
+  {
+    id: 'org_aura_resorts',
+    name: 'Aura Luxury Resorts Group',
+    slug: 'aura-resorts',
+    tagline: 'Ultra-Luxury Coastal & Alpine Sanctuaries',
+    tier: 'Portfolio Pro',
+    billingStatus: 'active',
+    billingCycle: 'annual',
+    planPrice: 890,
+    roomQuota: 120,
+    propertyQuota: 8,
+    customDomain: 'pms.aura-resorts.com',
+    billingEmail: 'finance@aurahotels.com',
+    paymentMethod: {
+      brand: 'amex',
+      last4: '8842',
+      expDate: '09/28'
+    },
+    features: [
+      'Multi-Property Central Reservation System (CRS)',
+      'Cross-Hotel Folio Routing & Room Charging',
+      'AI Concierge Aura v2 with Live Voice & Auto-Dispatch',
+      'Unified Multi-Channel OTA Sync & Parity Guard',
+      'Custom White-Label Subdomain & Branded Portals',
+      'Enterprise Role-Based Access Control (RBAC)',
+      'Dedicated Hospitality Solutions Engineer & 99.99% SLA'
+    ],
+    properties: [
+      {
+        id: 'the-azure-sanctuary-cliffside',
+        name: 'The Azure Sanctuary (Cliffside)',
+        location: 'Big Sur, California',
+        roomCount: 12,
+        createdAt: '2024-01-15T08:00:00Z'
+      },
+      {
+        id: 'azure-alpine-lodge-zermatt',
+        name: 'Azure Alpine Lodge (Zermatt)',
+        location: 'Zermatt, Switzerland',
+        roomCount: 18,
+        createdAt: '2024-08-20T10:30:00Z'
+      }
+    ],
+    members: [
+      {
+        id: 'mem_sarah_chen',
+        name: 'Sarah Chen',
+        email: 's.chen@aurahotels.com',
+        avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=300&auto=format&fit=crop',
+        role: 'Owner',
+        title: 'Group Portfolio Vice President',
+        assignedPropertyIds: ['all'],
+        status: 'active',
+        lastActive: 'Active now'
+      },
+      {
+        id: 'mem_marcus_vance',
+        name: 'Marcus Vance',
+        email: 'm.vance@aurahotels.com',
+        avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=300&auto=format&fit=crop',
+        role: 'General Manager',
+        title: 'General Manager (Cliffside)',
+        assignedPropertyIds: ['the-azure-sanctuary-cliffside'],
+        status: 'active',
+        lastActive: '12m ago'
+      },
+      {
+        id: 'mem_elena_vasquez',
+        name: 'Elena Vasquez',
+        email: 'e.vasquez@aurahotels.com',
+        avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=300&auto=format&fit=crop',
+        role: 'Housekeeping & Staff',
+        title: 'Director of Guest Services & Housekeeping',
+        assignedPropertyIds: ['all'],
+        status: 'active',
+        lastActive: '34m ago'
+      },
+      {
+        id: 'mem_julian_ross',
+        name: 'Julian Ross',
+        email: 'j.ross@aurahotels.com',
+        avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=300&auto=format&fit=crop',
+        role: 'Front Office Lead',
+        title: 'Front Office Operations Supervisor',
+        assignedPropertyIds: ['the-azure-sanctuary-cliffside', 'azure-alpine-lodge-zermatt'],
+        status: 'active',
+        lastActive: '2h ago'
+      }
+    ],
+    invoices: [
+      {
+        id: 'INV-2026-004',
+        date: '2026-05-01',
+        amount: 890,
+        status: 'paid',
+        plan: 'Portfolio Pro (Annual Renewal)',
+        period: 'May 01, 2026 - May 31, 2026'
+      },
+      {
+        id: 'INV-2026-003',
+        date: '2026-04-01',
+        amount: 890,
+        status: 'paid',
+        plan: 'Portfolio Pro',
+        period: 'Apr 01, 2026 - Apr 30, 2026'
+      },
+      {
+        id: 'INV-2026-002',
+        date: '2026-03-01',
+        amount: 890,
+        status: 'paid',
+        plan: 'Portfolio Pro',
+        period: 'Mar 01, 2026 - Mar 31, 2026'
+      }
+    ],
+    createdAt: '2024-01-10T12:00:00Z'
+  },
+  {
+    id: 'org_luxe_heritage',
+    name: 'Luxe Heritage Boutique Inc.',
+    slug: 'luxe-heritage',
+    tagline: 'Historic European Palazzos & Châteaux',
+    tier: 'Boutique Starter',
+    billingStatus: 'active',
+    billingCycle: 'monthly',
+    planPrice: 290,
+    roomQuota: 35,
+    propertyQuota: 3,
+    customDomain: 'stay.luxeboutique.fr',
+    billingEmail: 'accounts@luxeboutique.fr',
+    paymentMethod: {
+      brand: 'visa',
+      last4: '4102',
+      expDate: '11/27'
+    },
+    features: [
+      'Single & Multi-Property PMS Engine',
+      'Guest CRM & Personalized Preference Engine',
+      'Table & Spa POS Integration',
+      'Standard OTA Channel Sync (3 Channels)'
+    ],
+    properties: [
+      {
+        id: 'grand-palais-suite-hotel-paris',
+        name: 'Grand Palais Suite Hotel (Paris)',
+        location: '8th Arrondissement, Paris',
+        roomCount: 14,
+        createdAt: '2024-06-12T09:00:00Z'
+      },
+      {
+        id: 'villa-bellagio-lake-como',
+        name: 'Villa Bellagio (Lake Como)',
+        location: 'Bellagio, Lake Como, Italy',
+        roomCount: 10,
+        createdAt: '2024-09-01T14:15:00Z'
+      }
+    ],
+    members: [
+      {
+        id: 'mem_jean_paul',
+        name: 'Jean-Paul Laurent',
+        email: 'jp@luxeboutique.fr',
+        avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=300&auto=format&fit=crop',
+        role: 'Owner',
+        title: 'Managing Partner & Founder',
+        assignedPropertyIds: ['all'],
+        status: 'active',
+        lastActive: '1h ago'
+      },
+      {
+        id: 'mem_claire_dubois',
+        name: 'Claire Dubois',
+        email: 'c.dubois@luxeboutique.fr',
+        avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=300&auto=format&fit=crop',
+        role: 'Operations Director',
+        title: 'Front Office & Guest Director',
+        assignedPropertyIds: ['grand-palais-suite-hotel-paris'],
+        status: 'active',
+        lastActive: '5m ago'
+      }
+    ],
+    invoices: [
+      {
+        id: 'INV-2026-105',
+        date: '2026-05-01',
+        amount: 290,
+        status: 'paid',
+        plan: 'Boutique Starter (Monthly)',
+        period: 'May 01, 2026 - May 31, 2026'
+      }
+    ],
+    createdAt: '2024-06-01T10:00:00Z'
+  },
+  {
+    id: 'org_vanguard',
+    name: 'Vanguard Alpine & Coastal',
+    slug: 'vanguard-hospitality',
+    tagline: 'High-Altitude Luxury & Private Island Estates',
+    tier: 'Global Enterprise',
+    billingStatus: 'active',
+    billingCycle: 'annual',
+    planPrice: 2450,
+    roomQuota: 500,
+    propertyQuota: 25,
+    customDomain: 'cloud.vanguardresorts.com',
+    billingEmail: 'treasury@vanguardresorts.com',
+    paymentMethod: {
+      brand: 'mastercard',
+      last4: '9921',
+      expDate: '04/29'
+    },
+    features: [
+      'Unlimited Global Properties & Cluster Hierarchy',
+      'Centralized Global Folio & Cross-Property Currency Hedging',
+      'Enterprise SSO (Okta, Azure AD, SAML 2.0)',
+      'Custom AI Fine-Tuned Concierge Models',
+      'API Webhooks & Bi-Directional PMS Gateways',
+      'Dedicated Regional Account Manager & 24/7 SLA'
+    ],
+    properties: [
+      {
+        id: 'vanguard-sky-high-sanctuary-aspen',
+        name: 'Vanguard Sky High Sanctuary (Aspen)',
+        location: 'Aspen, Colorado',
+        roomCount: 24,
+        createdAt: '2023-11-10T11:00:00Z'
+      },
+      {
+        id: 'vanguard-ocean-haven-maui',
+        name: 'Vanguard Ocean Haven (Maui)',
+        location: 'Wailea, Maui, Hawaii',
+        roomCount: 32,
+        createdAt: '2024-03-05T08:30:00Z'
+      },
+      {
+        id: 'vanguard-kyoto-pavilion-kyoto',
+        name: 'Vanguard Kyoto Pavilion (Kyoto)',
+        location: 'Higashiyama, Kyoto, Japan',
+        roomCount: 16,
+        createdAt: '2024-10-18T16:00:00Z'
+      }
+    ],
+    members: [
+      {
+        id: 'mem_alexander_drake',
+        name: 'Alexander Drake',
+        email: 'a.drake@vanguardresorts.com',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=300&auto=format&fit=crop',
+        role: 'Owner',
+        title: 'Chief Executive Officer',
+        assignedPropertyIds: ['all'],
+        status: 'active',
+        lastActive: 'Active now'
+      },
+      {
+        id: 'mem_mei_lin',
+        name: 'Mei Lin',
+        email: 'm.lin@vanguardresorts.com',
+        avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?q=80&w=300&auto=format&fit=crop',
+        role: 'Operations Director',
+        title: 'VP Global Operations',
+        assignedPropertyIds: ['all'],
+        status: 'active',
+        lastActive: '45m ago'
+      }
+    ],
+    invoices: [
+      {
+        id: 'INV-2026-901',
+        date: '2026-05-01',
+        amount: 2450,
+        status: 'paid',
+        plan: 'Global Enterprise (Annual)',
+        period: 'May 01, 2026 - May 31, 2026'
+      }
+    ],
+    createdAt: '2023-11-01T09:00:00Z'
+  }
+];
+
 

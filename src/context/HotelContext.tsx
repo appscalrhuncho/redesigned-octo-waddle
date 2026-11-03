@@ -20,7 +20,12 @@ import {
   GroupEvent,
   UserRole,
   CurrencyCode,
-  HotelProperty
+  HotelProperty,
+  Tenant,
+  TenantMember,
+  TenantTier,
+  TenantRole,
+  TenantBillingCycle
 } from '../types';
 import {
   INITIAL_ROOMS,
@@ -37,7 +42,8 @@ import {
   INITIAL_AUTOMATION_RULES,
   INITIAL_SERVICE_REQUESTS,
   INITIAL_MESSAGE_THREADS,
-  INITIAL_GROUP_EVENTS
+  INITIAL_GROUP_EVENTS,
+  INITIAL_TENANTS
 } from '../data/mockData';
 
 interface HotelContextType {

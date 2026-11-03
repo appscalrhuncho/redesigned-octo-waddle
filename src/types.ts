@@ -330,3 +330,55 @@ export interface HotelProperty {
   roomCount: number;
   createdAt: string;
 }
+
+export type TenantTier = 'Boutique Starter' | 'Portfolio Pro' | 'Global Enterprise';
+export type TenantBillingStatus = 'active' | 'trialing' | 'past_due';
+export type TenantBillingCycle = 'monthly' | 'annual';
+export type TenantRole = 'Owner' | 'Operations Director' | 'General Manager' | 'Front Office Lead' | 'Housekeeping & Staff';
+
+export interface TenantMember {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  role: TenantRole;
+  assignedPropertyIds: string[]; // ['all'] or array of property ids
+  status: 'active' | 'invited';
+  lastActive?: string;
+  title?: string;
+}
+
+export interface TenantInvoice {
+  id: string;
+  date: string;
+  amount: number;
+  status: 'paid' | 'pending' | 'refunded';
+  plan: string;
+  period: string;
+}
+
+export interface Tenant {
+  id: string;
+  name: string;
+  slug: string;
+  tagline?: string;
+  tier: TenantTier;
+  billingStatus: TenantBillingStatus;
+  billingCycle: TenantBillingCycle;
+  planPrice: number;
+  roomQuota: number;
+  propertyQuota: number;
+  customDomain?: string;
+  billingEmail: string;
+  paymentMethod: {
+    brand: 'visa' | 'mastercard' | 'amex';
+    last4: string;
+    expDate: string;
+  };
+  features: string[];
+  properties: HotelProperty[];
+  members: TenantMember[];
+  invoices: TenantInvoice[];
+  createdAt: string;
+}
+
