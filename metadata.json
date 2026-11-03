@@ -1,0 +1,6 @@
+{
+  "name": "Boutique Hotel Reservations & Guest Suite",
+  "description": "Comprehensive responsive reservations and hospitality management platform for boutique hotels featuring real-time room availability matrix, guest CRM, multi-channel booking engine, front desk operations, F&B/Spa POS room charging, housekeeping dispatch, and revenue analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

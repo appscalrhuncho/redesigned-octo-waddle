@@ -1,0 +1,69 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="gold-band1" x1="16" y1="50" x2="96" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#FFF2D1" />
+      <stop offset="45%" stopColor="#F5DC8C" />
+      <stop offset="100%" stopColor="#E2BD4E" />
+    </linearGradient>
+
+    <linearGradient id="gold-loop" x1="16" y1="40" x2="96" y2="190" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#F3D98B" />
+      <stop offset="25%" stopColor="#D4AF37" />
+      <stop offset="65%" stopColor="#BA9225" />
+      <stop offset="100%" stopColor="#876510" />
+    </linearGradient>
+
+    <linearGradient id="gold-inner" x1="20" y1="80" x2="96" y2="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#7E590A" />
+      <stop offset="50%" stopColor="#573D05" />
+      <stop offset="100%" stopColor="#382602" />
+    </linearGradient>
+
+    <linearGradient id="gold-band1-inv" x1="184" y1="150" x2="104" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#FFF2D1" />
+      <stop offset="45%" stopColor="#F5DC8C" />
+      <stop offset="100%" stopColor="#E2BD4E" />
+    </linearGradient>
+
+    <linearGradient id="gold-loop-inv" x1="184" y1="160" x2="104" y2="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#F3D98B" />
+      <stop offset="25%" stopColor="#D4AF37" />
+      <stop offset="65%" stopColor="#BA9225" />
+      <stop offset="100%" stopColor="#876510" />
+    </linearGradient>
+
+    <linearGradient id="gold-inner-inv" x1="180" y1="120" x2="104" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stopColor="#7E590A" />
+      <stop offset="50%" stopColor="#573D05" />
+      <stop offset="100%" stopColor="#382602" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Half -->
+  <path
+    d="M 96 74 L 96 136 L 36 171 C 24 164 16 153 16 139 L 16 116 L 96 74 Z"
+    fill="url(#gold-inner)"
+  />
+  <path
+    d="M 96 44 L 38 77 C 24 85 16 97 16 112 L 16 142 C 16 155 23 166 33 172 L 96 198 L 96 174 L 40 152 C 34 149 30 144 30 138 L 30 114 C 30 106 34 99 42 95 L 96 66 L 96 44 Z"
+    fill="url(#gold-loop)"
+  />
+  <path
+    d="M 96 8 L 32 39 C 22 44 16 55 16 67 L 16 92 L 28 85 C 28 77 32 70 39 66 L 96 34 L 96 8 Z"
+    fill="url(#gold-band1)"
+  />
+
+  <!-- Right Half (180° Rotated) -->
+  <path
+    d="M 104 126 L 104 64 L 164 29 C 176 36 184 47 184 61 L 184 84 L 104 126 Z"
+    fill="url(#gold-inner-inv)"
+  />
+  <path
+    d="M 104 156 L 162 123 C 176 115 184 103 184 88 L 184 58 C 184 45 177 34 167 28 L 104 2 L 104 26 L 160 48 C 166 51 170 56 170 62 L 170 86 C 170 94 166 101 158 105 L 104 134 L 104 156 Z"
+    fill="url(#gold-loop-inv)"
+  />
+  <path
+    d="M 104 192 L 168 161 C 178 156 184 145 184 133 L 184 108 L 172 115 C 172 123 168 130 161 134 L 104 166 L 104 192 Z"
+    fill="url(#gold-band1-inv)"
+  />
+</svg>

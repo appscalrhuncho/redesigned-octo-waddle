@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+:root {
+  --brand-lime: #b8ff00;
+  --brand-cyan: #00ddf2;
+  --brand-ink: #080c11;
+  --cool-canvas: #f3f6f9;
+  color-scheme: light;
+}
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #111a22;
+    background-color: var(--cool-canvas);
+  }
+
+  h1, h2, h3, .font-serif-heading {
+    font-family: 'Space Grotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+}
+
+/* Brand treatment for the shared shell, using the supplied neon mark palette. */
+.brand-dark-shell {
+  color-scheme: dark;
+}
+
+.brand-command-hero {
+  background-image:
+    radial-gradient(ellipse at 92% 0%, rgb(0 221 242 / 0.11), transparent 34%),
+    linear-gradient(115deg, #080c11 0%, #101820 58%, #0a1016 100%);
+}
+
+.brand-neon-glow {
+  box-shadow: 0 0 28px rgb(184 255 0 / 0.16), 0 0 44px rgb(0 221 242 / 0.08);
+}
+
+/* Cool the inherited luxury palette without changing operational status colors. */
+[class~="bg-[#F7F4EE]"],
+[class~="bg-[#FAF8F4]"],
+[class~="bg-[#FBF9F5]"],
+[class~="bg-[#F8F6F1]"],
+[class~="bg-[#FAF6EC]"] {
+  background-color: #f4f7fa !important;
+}
+
+[class~="bg-[#F2ECE1]"],
+[class~="bg-[#EAE4D8]"] {
+  background-color: #eaf1f5 !important;
+}
+
+[class~="border-[#EAE3D6]"],
+[class~="border-[#E7DFD2]"],
+[class~="border-[#E0D8CC]"],
+[class~="border-[#D8CEBF]"] {
+  border-color: #dce5eb !important;
+}
+
+[class~="text-[#7A8C84]"] { color: #647580 !important; }
+[class~="text-[#52645D]"] { color: #54636d !important; }
+[class~="text-[#9E7D23]"] { color: #087887 !important; }
+[class~="text-[#304139]"] { color: #24343e !important; }
+
+/* Re-map the old gold accent to high-contrast lime/cyan brand accents. */
+[class~="text-[#D4AF37]"] { color: #5d8200 !important; }
+[class~="text-[#E0CDA9]"] { color: #5d8200 !important; }
+.brand-dark-shell [class~="text-[#D4AF37]"],
+.brand-dark-shell [class~="text-[#E0CDA9]"],
+.brand-command-hero [class~="text-[#D4AF37]"],
+.brand-command-hero [class~="text-[#E0CDA9]"] {
+  color: #c8ff45 !important;
+}
+
+[class~="bg-[#D4AF37]"] {
+  background-color: var(--brand-lime) !important;
+}
+
+[class*="bg-[#D4AF37]/"] {
+  background-color: rgb(184 255 0 / 0.14) !important;
+}
+
+[class*="border-[#D4AF37]"] { border-color: var(--brand-lime) !important; }
+[class*="ring-[#D4AF37]"] { --tw-ring-color: var(--brand-lime) !important; }
+[class*="hover:bg-[#D4AF37]"]:hover { background-color: #c8ff45 !important; }
+[class*="hover:text-[#D4AF37]"]:hover { color: var(--brand-cyan) !important; }
+[class*="hover:border-[#D4AF37]"]:hover { border-color: var(--brand-cyan) !important; }
+
+/* Keep existing dropdowns and quick actions aligned with the new dark shell. */
+.brand-dark-shell [class~="bg-[#101814]/95"],
+.brand-dark-shell [class~="bg-[#14201B]"],
+.brand-dark-shell [class~="bg-[#1A2420]"],
+.brand-dark-shell [class~="bg-[#19221E]"],
+.brand-dark-shell [class~="bg-[#202C26]"],
+.brand-dark-shell [class~="bg-[#1C2A24]"] {
+  background-color: #0c1218 !important;
+}
+
+.brand-dark-shell [class~="border-[#26332C]"],
+.brand-dark-shell [class~="border-[#2C3B34]"],
+.brand-dark-shell [class~="border-[#2D3E35]"],
+.brand-dark-shell [class~="border-[#3A4A43]"],
+.brand-dark-shell [class~="border-[#3A4E43]"],
+.brand-dark-shell [class~="border-[#3B5146]"] {
+  border-color: #263540 !important;
+}
+
+.brand-dark-shell [class*="hover:bg-[#24312B]"]:hover,
+.brand-dark-shell [class*="hover:bg-[#25372D]"]:hover,
+.brand-dark-shell [class*="hover:bg-[#25332C]"]:hover,
+.brand-dark-shell [class*="hover:bg-[#223029]"]:hover,
+.brand-dark-shell [class*="hover:bg-[#2B3B33]"]:hover {
+  background-color: #17232b !important;
+}
+
+/* Cool-toned, compact scrollbars. */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(8, 44, 58, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 140, 160, 0.45);
+}
+
+/* Smooth transitions */
+.transition-smooth {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
